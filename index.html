@@ -1,0 +1,147 @@
+<body>
+  <!-- neon intro animation -->
+  <div id="neonIntro">
+    <h1 class="neonText">Sushree ❤️ Satya</h1>
+  </div>
+
+  <!-- particles -->
+  <canvas id="heartCanvas"></canvas>
+
+  <!-- main content -->
+  <section class="mainSection">
+    <div class="contentCard fadeIn">
+      <h2>Our Story Begins…</h2>
+      <div class="divider"></div>
+      <p>
+        Some animations are short…<br>
+        but the feeling stays forever.
+      </p>
+    </div>
+  </section>
+
+<script>
+// ** neon text animation **
+const neonText = document.querySelector('.neonText');
+setTimeout(()=> { neonText.classList.add('active'); }, 300);
+
+// ** heart particle animation **
+const canvas = document.getElementById("heartCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+function heart(x, y, s, hue) {
+  this.x = x;
+  this.y = y;
+  this.s = s;
+  this.hue = hue;
+}
+let hearts = [];
+
+function drawHeart(h) {
+  ctx.beginPath();
+  ctx.fillStyle = `hsl(${h.hue}, 80%, 65%)`;
+  ctx.moveTo(h.x, h.y);
+  ctx.arc(h.x, h.y, h.s, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  hearts.forEach((h,i) => {
+    h.y -= 1 + Math.random() * 1.5;
+    h.x += Math.random() * 2 - 1;
+    h.hue += 1;
+
+    drawHeart(h);
+    if (h.y < -10) hearts.splice(i, 1);
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+
+setInterval(() => {
+  hearts.push(new heart(
+    Math.random() * canvas.width,
+    canvas.height + 20,
+    Math.random() * 9 + 6,
+    Math.random() * 360
+  ));
+}, 130);
+
+// ** fade in main content after intro **
+setTimeout(() => {
+  document.querySelector('.contentCard').classList.add('show');
+  document.getElementById('neonIntro').style.opacity = "0";
+}, 3500);
+</script>
+
+<style>
+body {
+  margin:0;
+  padding:0;
+  overflow-x:hidden;
+  background: #0a0a0a;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
+
+/* neon intro */
+#neonIntro {
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background: #000;
+  z-index:1000;
+  transition:0.7s;
+}
+.neonText {
+  font-size:50px;
+  font-family:'Playfair Display', serif;
+  color: #ff75a0;
+  text-shadow:
+    0 0 8px #ff75a0,
+    0 0 20px #ff2d6f,
+    0 0 30px #ff2d6f,
+    0 0 50px #ff1a4b,
+    0 0 80px #ff1a4b;
+  opacity:0;
+  transform: scale(0.5);
+  transition:1s ease;
+}
+.neonText.active {
+  opacity:1;
+  transform: scale(1);
+}
+
+/* main section */
+.mainSection {
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.contentCard {
+  opacity:0;
+  transform: translateY(40px);
+  transition:1.4s ease-out;
+  text-align:center;
+  padding:40px;
+  backdrop-filter:blur(14px);
+  background:rgba(255,255,255,0.07);
+  border-radius:20px;
+  box-shadow:0 25px 80px rgba(0,0,0,0.8);
+}
+.contentCard.show {
+  opacity:1;
+  transform:translateY(0);
+}
+.divider {
+  height:1px;
+  width:80px;
+  background:linear-gradient(to right,transparent,#fff,transparent);
+  margin:20px auto;
+}
+</style>
